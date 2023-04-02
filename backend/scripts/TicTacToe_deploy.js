@@ -6,7 +6,7 @@ async function main() {
 
     await contract.deployed()
 
-    console.log("MyContract deployed to:", contract.address)
+    console.log("TicTacToe Contract deployed to:", contract.address)
 }
 
 main().catch((error) => {

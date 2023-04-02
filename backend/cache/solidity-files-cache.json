@@ -1,0 +1,40 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/ryanhan/Documents/blockchain/learnweb3/projects/crypto-tictactoe/backend/contracts/TicTacToe.sol": {
+      "lastModificationDate": 1680452093101,
+      "contentHash": "eea4382fb7da25f7ea6e2df69688124c",
+      "sourceName": "contracts/TicTacToe.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "TicTacToe"
+      ]
+    }
+  }
+}
