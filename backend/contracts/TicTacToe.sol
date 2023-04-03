@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
+import "hardhat/console.sol";
+
 contract TicTacToe {
     enum GameStatus {
         Waiting,
@@ -64,7 +66,7 @@ contract TicTacToe {
         board[gameNum][x][y] = playerIndex;
 
         if (checkWin(gameNum, playerIndex)) {
-            winner[gameNum] = players[gameNum][playerIndex];
+            winner[gameNum] = players[gameNum][playerIndex - 1];
             status[gameNum] = GameStatus.Finished;
             prize(gameNum);
             return;

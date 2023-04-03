@@ -5,7 +5,7 @@ async function main() {
     const Contract = await hre.ethers.getContractAt("TicTacToe", contractAddress)
     const amount = ethers.utils.parseEther("0.05")
     // console.log(Contract)
-    const receipt = await Contract.createGame("helloworld", { value: amount })
+    const receipt = await Contract.createGame("game2", { value: amount })
     // console.log(receipt)
     await receipt.wait()
     console.log("complete!!!!!")

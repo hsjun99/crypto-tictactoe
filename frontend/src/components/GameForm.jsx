@@ -14,25 +14,33 @@ import {
     ModalBody,
     ModalFooter,
 } from "@chakra-ui/react"
+import { useMutation } from "react-query"
+import createGame from "../scripts/createGame"
 
-const GameForm = ({ onSubmit }) => {
+const GameForm = ({}) => {
     const [name, setName] = useState("")
-    const [status, setStatus] = useState("waiting")
-    const [participants, setParticipants] = useState("")
     const [isOpen, setIsOpen] = useState(false)
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        onSubmit({
-            name,
-            status,
-            participants: parseInt(participants),
-        })
-        setName("")
-        setStatus("waiting")
-        setParticipants("")
+        // onSubmit({
+        //     name,
+        //     status,
+        //     participants: parseInt(participants),
+        // })
+        // setName()
+        // setStatus("waiting")
+        // setParticipants("")
         setIsOpen(false)
+        console.log("hello")
+        mutate(name)
     }
+
+    const { mutate } = useMutation(createGame, {
+        onSuccess: () => {
+            queryClient.invalidateQueries("GamesData")
+        },
+    })
 
     return (
         <>
@@ -52,7 +60,7 @@ const GameForm = ({ onSubmit }) => {
                                         onChange={(event) => setName(event.target.value)}
                                     />
                                 </FormControl>
-                                <FormControl id="status" isRequired>
+                                {/* <FormControl id="status" isRequired>
                                     <FormLabel>Status</FormLabel>
                                     <Select
                                         value={status}
@@ -62,15 +70,15 @@ const GameForm = ({ onSubmit }) => {
                                         <option value="playing">Playing</option>
                                         <option value="finished">Finished</option>
                                     </Select>
-                                </FormControl>
-                                <FormControl id="participants" isRequired>
+                                </FormControl> */}
+                                {/* <FormControl id="participants" isRequired>
                                     <FormLabel>Number of Participants</FormLabel>
                                     <Input
                                         type="number"
                                         value={participants}
                                         onChange={(event) => setParticipants(event.target.value)}
                                     />
-                                </FormControl>
+                                </FormControl> */}
                             </Stack>
                         </form>
                     </ModalBody>
