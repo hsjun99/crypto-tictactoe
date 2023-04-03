@@ -7,21 +7,51 @@ contract TicTacToe {
         Playing,
         Finished
     }
-
+    mapping(uint256 => string) public name;
     mapping(uint256 => address[]) public players;
     mapping(uint256 => uint8[3][3]) public board;
     mapping(uint256 => address) public turn;
     mapping(uint256 => address) public winner;
     mapping(uint256 => GameStatus) public status;
 
-    constructor() {}
+    uint256 public gameCnt;
+
+    constructor() {
+        gameCnt = 0;
+    }
+
+    function getGameData(
+        uint256 gameNum
+    )
+        public
+        view
+        returns (string memory, address[] memory, uint8[3][3] memory, address, address, GameStatus)
+    {
+        return (
+            name[gameNum],
+            players[gameNum],
+            board[gameNum],
+            turn[gameNum],
+            winner[gameNum],
+            status[gameNum]
+        );
+    }
+
+    function createGame(string memory _name) public payable {
+        name[gameCnt] = _name;
+        joinGame(gameCnt);
+        turn[gameCnt] = msg.sender;
+        gameCnt++;
+    }
 
     function joinGame(uint256 gameNum) public payable {
         require(msg.value == 0.05 ether, "You must send 0.05 ether");
         require(status[gameNum] == GameStatus.Waiting, "Game is already full");
 
         players[gameNum].push(msg.sender);
-        status[gameNum] = GameStatus.Playing;
+        players[gameNum].length == 2
+            ? status[gameNum] = GameStatus.Playing
+            : status[gameNum] = GameStatus.Waiting;
     }
 
     function play(uint256 gameNum, uint8 x, uint8 y) public {
