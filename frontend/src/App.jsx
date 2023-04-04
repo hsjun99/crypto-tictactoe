@@ -1,18 +1,50 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
 import { Box, Flex } from "@chakra-ui/react"
 import AuthButton from "./components/AuthButton"
 import Board from "./components/Board"
 import GameList from "./components/GameList"
-import GameForm from "./components/GameForm"
+import getGameContract from "./scripts/getGameContract"
 
 function App() {
     const [userAddress, setUserAddress] = useState("")
-    // const [player, setPlayer] = useState({})
     const [games, setGames] = useState({})
     const [joinedGame, setJoinedGame] = useState(null)
 
     const queryClient = new QueryClient()
+
+    useEffect(() => {
+        getGameContract().then((contract) => {
+            contract.on("Played", (gameNum) => {
+                console.log("Played")
+                if (joinedGame != null && gameNum == joinedGame.key) {
+                    queryClient.invalidateQueries(`Game-${gameNum}`)
+                }
+            })
+            contract.on("GameCreated", (gameNum) => {
+                console.log("GameCreated")
+                queryClient.invalidateQueries(["GamesData"])
+            })
+            contract.on("JoinedGame", (gameNum) => {
+                console.log("JoinedGame")
+                if (joinedGame != null && gameNum == joinedGame.key) {
+                    queryClient.invalidateQueries(`Game-${gameNum}`)
+                }
+            })
+            contract.on("GameFinished", (gameNum) => {
+                console.log("GameFinished")
+                if (joinedGame != null && gameNum == joinedGame.key) {
+                    queryClient.invalidateQueries(`Game-${gameNum}`)
+                }
+            })
+            contract.on("RewardClaimed", (gameNum) => {
+                console.log("RewardClaimed")
+                if (joinedGame != null && gameNum == joinedGame.key) {
+                    queryClient.invalidateQueries(`Game-${gameNum}`)
+                }
+            })
+        })
+    }, [])
 
     return (
         <QueryClientProvider client={queryClient}>

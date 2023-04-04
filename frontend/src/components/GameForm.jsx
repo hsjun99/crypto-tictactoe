@@ -23,7 +23,7 @@ const GameForm = ({}) => {
 
     const queryClient = useQueryClient()
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
         // onSubmit({
         //     name,
@@ -34,7 +34,7 @@ const GameForm = ({}) => {
         // setStatus("waiting")
         // setParticipants("")
         setIsOpen(false)
-        mutate(name)
+        await mutate(name)
     }
 
     const { mutate } = useMutation(createGame, {

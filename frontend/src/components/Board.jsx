@@ -42,33 +42,20 @@ const Board = ({ game, setGame, userAddress }) => {
             // refetchInterval: 5000
         }
     )
-    console.log(data)
+    // console.log(data)
 
     let listenerCalls = 0
 
-    useEffect(() => {
-        getGameContract().then((contract) => {
-            contract.on("Played", (gameNum, x, y, player) => {
-                listenerCalls++
-                console.log(listenerCalls)
-                if (gameNum == game.key) {
-                    queryClient.invalidateQueries(`Game-${game.key}`)
-                    // console.log("EVENT PLAYED!!")
-                }
-            })
-        })
-    }, [])
-
     const { mutate } = useMutation(postPlay, {
         onSuccess: () => {
-            queryClient.invalidateQueries(`Game-${game.key}`)
+            queryClient.invalidateQueries([`Game-${game.key}`])
         },
     })
 
-    const handleSquareClick = (index) => {
+    const handleSquareClick = async (index) => {
         const x = Math.floor(index / 3)
         const y = index % 3
-        mutate({ x, y })
+        await mutate({ x, y })
         // if (data?.turn != player) return
         // if (winner || board[index]) return
 

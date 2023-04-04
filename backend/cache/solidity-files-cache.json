@@ -6,7 +6,7 @@
       "contentHash": "4a17fc432c533a0da5468ef7b17f5211",
       "sourceName": "contracts/TicTacToe.sol",
       "solcConfig": {
-        "version": "0.8.9",
+        "version": "0.8.18",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -43,7 +43,7 @@
       "contentHash": "4ff3cd2f6272c9a6516e9ee4f2b967d3",
       "sourceName": "hardhat/console.sol",
       "solcConfig": {
-        "version": "0.8.9",
+        "version": "0.8.18",
         "settings": {
           "optimizer": {
             "enabled": false,
