@@ -45,7 +45,9 @@ const GameForm = ({}) => {
 
     return (
         <>
-            <Button onClick={() => setIsOpen(true)}>Create New Game</Button>
+            <Button justify="end" mr="16px" mt="16px" onClick={() => setIsOpen(true)}>
+                + New Game
+            </Button>
             <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
                 <ModalOverlay />
                 <ModalContent>

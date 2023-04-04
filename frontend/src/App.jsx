@@ -28,7 +28,7 @@ function App() {
                         setGames={setGames}
                     ></GameList>
                 )}
-                {joinedGame == null && <GameForm></GameForm>}
+                {/* {joinedGame == null && <GameForm></GameForm>} */}
                 {joinedGame != null && <Board game={joinedGame} userAddress={userAddress}></Board>}
             </Box>
         </QueryClientProvider>

@@ -3,6 +3,7 @@ import { Box, Center, Text, Badge, Flex, Heading, Stack, Button } from "@chakra-
 import getGameAll from "../scripts/getGameAll"
 import { useQuery } from "react-query"
 import joinGame from "../scripts/joinGame"
+import GameForm from "./GameForm"
 
 const GameCard = ({ game, onClick }) => {
     const { name, status, players } = game
@@ -91,11 +92,16 @@ const GameList = ({ userAddress, setJoinedGame }) => {
     const { waitingGames, playingGames, finishedGames } = groupGamesByStatus(data || [])
 
     return (
-        <Box maxW="800px" mx="auto">
-            <Center my="8">
-                <Heading>Game List</Heading>
+        <Box maxW="800px" mx="auto" minHeight="100vh">
+            <Center my="2">
+                <Heading>Game Board</Heading>
             </Center>
-            <Flex justify="space-between">
+            <Box display="flex" justifyContent="flex-end">
+                <Box p="2">
+                    <GameForm />
+                </Box>
+            </Box>
+            <Flex justify="space-between" minHeight="70vh" p="4">
                 <Box
                     width="250px"
                     p="4"

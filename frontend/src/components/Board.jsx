@@ -1,10 +1,22 @@
 import { useEffect, useState } from "react"
-import { Center, Box, Heading, Grid, GridItem, Button, Text, Progress } from "@chakra-ui/react"
+import {
+    Center,
+    Box,
+    Heading,
+    Grid,
+    GridItem,
+    Button,
+    Text,
+    Progress,
+    Flex,
+} from "@chakra-ui/react"
 import trimAddress from "../utils/format"
 import { useQuery, useMutation, useQueryClient } from "react-query"
 import getGame from "../scripts/getGame"
 import playGame from "../scripts/playGame"
 import getGameContract from "../scripts/getGameContract"
+import GAME_STATUS from "../utils/gameStatus"
+import claimReward from "../scripts/claimReward"
 
 const Board = ({ game, setGame, userAddress }) => {
     // const [player, setPlayer] = useState("X")
@@ -30,15 +42,22 @@ const Board = ({ game, setGame, userAddress }) => {
             // refetchInterval: 5000
         }
     )
+    console.log(data)
 
-    getGameContract().then((contract) => {
-        contract.on("Played", (gameNum, x, y, player) => {
-            if (gameNum == game.key) {
-                queryClient.invalidateQueries(`Game-${game.key}`)
-                console.log("EVENT PLAYED!!")
-            }
+    let listenerCalls = 0
+
+    useEffect(() => {
+        getGameContract().then((contract) => {
+            contract.on("Played", (gameNum, x, y, player) => {
+                listenerCalls++
+                console.log(listenerCalls)
+                if (gameNum == game.key) {
+                    queryClient.invalidateQueries(`Game-${game.key}`)
+                    // console.log("EVENT PLAYED!!")
+                }
+            })
         })
-    })
+    }, [])
 
     const { mutate } = useMutation(postPlay, {
         onSuccess: () => {
@@ -92,6 +111,14 @@ const Board = ({ game, setGame, userAddress }) => {
     //     setWinner(null)
     // }
 
+    async function handleClaimReward() {
+        if (data?.winner == userAddress) {
+            await claimReward(data?.key, "win")
+        } else {
+            await claimReward(data?.key, "tie")
+        }
+    }
+
     return (
         <Center height="95vh" bg="gray.50">
             <Box
@@ -134,17 +161,49 @@ const Board = ({ game, setGame, userAddress }) => {
                         </Text>
                     ) : (
                         <>
-                            <Text fontSize="3xl" fontWeight="bold" mb="2">
-                                {data != null &&
-                                    (data?.turn != userAddress
-                                        ? `Next player: ${trimAddress(data?.turn)}`
-                                        : "Your turn!")}
-                            </Text>
+                            {data?.status == "finished" && (
+                                <Text fontSize="xl" fontWeight="bold" mb="2">
+                                    Game is Finished!!
+                                </Text>
+                            )}
+                            {data?.status != "finished" && (
+                                <Text fontSize="xl" fontWeight="bold" mb="2">
+                                    {data != null && data?.players.length == 2
+                                        ? data?.turn != userAddress
+                                            ? `Next player playing: ${trimAddress(data?.turn)}`
+                                            : "Your turn!"
+                                        : "Waiting for a player ..."}
+                                </Text>
+                            )}
                             <Progress
                                 size="xs"
                                 isIndeterminate
-                                visibility={data?.turn != userAddress ? "visible" : "hidden"}
+                                visibility={
+                                    data?.turn != userAddress && data?.status == "playing"
+                                        ? "visible"
+                                        : "hidden"
+                                }
                             />
+                            {data != null &&
+                                data?.status == "finished" &&
+                                (data?.winner == userAddress ||
+                                    (data?.winner != data?.players[0] &&
+                                        data?.winner != data?.players[1])) && (
+                                    <Button
+                                        colorScheme="green"
+                                        mr="4"
+                                        isDisabled={
+                                            data?.rewardClaimed[data?.players.indexOf(userAddress)]
+                                        }
+                                        onClick={async () => await handleClaimReward()}
+                                    >
+                                        {data?.rewardClaimed[data?.players.indexOf(userAddress)]
+                                            ? "Reward Claimed"
+                                            : `Claim Reward: ${
+                                                  data?.winner == userAddress ? "Win" : "Tie"
+                                              }`}
+                                    </Button>
+                                )}
                         </>
                     )}
                 </Box>

@@ -13,6 +13,7 @@ async function getGame(gameNum) {
         turn: game[3],
         winner: game[4],
         status: GAME_STATUS[game[5]],
+        rewardClaimed: game[6],
     }
 }
 
