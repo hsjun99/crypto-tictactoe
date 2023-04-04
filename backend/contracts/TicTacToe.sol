@@ -4,6 +4,8 @@ pragma solidity ^0.8.9;
 import "hardhat/console.sol";
 
 contract TicTacToe {
+    event Played(uint256 indexed gameNum, uint8 x, uint8 y, address player);
+
     enum GameStatus {
         Waiting,
         Playing,
@@ -64,6 +66,8 @@ contract TicTacToe {
         uint8 playerIndex = turn[gameNum] == players[gameNum][0] ? 1 : 2;
 
         board[gameNum][x][y] = playerIndex;
+
+        emit Played(gameNum, x, y, msg.sender);
 
         if (checkWin(gameNum, playerIndex)) {
             winner[gameNum] = players[gameNum][playerIndex - 1];

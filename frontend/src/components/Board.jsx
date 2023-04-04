@@ -4,11 +4,14 @@ import trimAddress from "../utils/format"
 import { useQuery, useMutation, useQueryClient } from "react-query"
 import getGame from "../scripts/getGame"
 import playGame from "../scripts/playGame"
+import getGameContract from "../scripts/getGameContract"
 
 const Board = ({ game, setGame, userAddress }) => {
     const [player, setPlayer] = useState("X")
     const [board, setBoard] = useState(Array(9).fill(null))
     const [winner, setWinner] = useState(null)
+
+    const queryClient = useQueryClient()
 
     async function getGameData() {
         const gData = await getGame(game.key)
@@ -28,6 +31,15 @@ const Board = ({ game, setGame, userAddress }) => {
         }
     )
 
+    getGameContract().then((contract) => {
+        contract.on("Played", (gameNum, x, y, player) => {
+            if (gameNum == game.key) {
+                queryClient.invalidateQueries(`Game-${game.key}`)
+                console.log("EVENT PLAYED!!")
+            }
+        })
+    })
+
     const { mutate } = useMutation(postPlay, {
         onSuccess: () => {
             queryClient.invalidateQueries(`Game-${game.key}`)
@@ -38,7 +50,6 @@ const Board = ({ game, setGame, userAddress }) => {
         const x = Math.floor(index / 3)
         const y = index % 3
         mutate({ x, y })
-        console.log("mutated")
         if (data?.turn != player) return
         if (winner || board[index]) return
 

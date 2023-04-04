@@ -32,7 +32,6 @@ const GameForm = ({}) => {
         // setStatus("waiting")
         // setParticipants("")
         setIsOpen(false)
-        console.log("hello")
         mutate(name)
     }
 
