@@ -4,12 +4,6 @@ import getGameAll from "../scripts/getGameAll"
 import { useQuery } from "react-query"
 import joinGame from "../scripts/joinGame"
 
-const games = [
-    { name: "Game 1", status: "waiting", participants: 2 },
-    { name: "Game 2", status: "playing", participants: 3 },
-    { name: "Game 3", status: "finished", participants: 4 },
-]
-
 const GameCard = ({ game, onClick }) => {
     const { name, status, players } = game
     const statusColor = status === "waiting" ? "gray" : status === "playing" ? "yellow" : "green"
@@ -78,16 +72,88 @@ const GameList = ({ userAddress, setJoinedGame }) => {
         setSelectedGame(game)
     }
 
+    const groupGamesByStatus = (games) => {
+        const waitingGames = []
+        const playingGames = []
+        const finishedGames = []
+        games.forEach((game) => {
+            if (game.status === "waiting") {
+                waitingGames.push(game)
+            } else if (game.status === "playing") {
+                playingGames.push(game)
+            } else if (game.status === "finished") {
+                finishedGames.push(game)
+            }
+        })
+        return { waitingGames, playingGames, finishedGames }
+    }
+
+    const { waitingGames, playingGames, finishedGames } = groupGamesByStatus(data || [])
+
     return (
         <Box maxW="800px" mx="auto">
             <Center my="8">
                 <Heading>Game List</Heading>
             </Center>
-            <Stack spacing="4">
-                {data?.map((game, index) => (
-                    <GameCard key={index} game={game} onClick={() => handleGameClick(game)} />
-                ))}
-            </Stack>
+            <Flex justify="space-between">
+                <Box
+                    width="250px"
+                    p="4"
+                    m="-4"
+                    style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.07)", borderRadius: "8px" }}
+                >
+                    <Heading as="h2" size="md">
+                        Waiting Games
+                    </Heading>
+                    <Stack spacing="4">
+                        {waitingGames?.map((game, index) => (
+                            <GameCard
+                                key={index}
+                                game={game}
+                                onClick={() => handleGameClick(game)}
+                            />
+                        ))}
+                    </Stack>
+                </Box>
+                <Box
+                    width="250px"
+                    p="4"
+                    m="-4"
+                    style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.07)", borderRadius: "8px" }}
+                >
+                    <Heading as="h2" size="md">
+                        Playing Games
+                    </Heading>
+                    <Stack spacing="4">
+                        {playingGames?.map((game, index) => (
+                            <GameCard
+                                key={index}
+                                game={game}
+                                onClick={() => handleGameClick(game)}
+                            />
+                        ))}
+                    </Stack>
+                </Box>
+                <Box
+                    width="250px"
+                    p="4"
+                    m="-4"
+                    style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.07)", borderRadius: "8px" }}
+                >
+                    <Heading as="h2" size="md">
+                        Finished Games
+                    </Heading>
+                    <Stack spacing="4">
+                        {finishedGames?.map((game, index) => (
+                            <GameCard
+                                key={index}
+                                game={game}
+                                onClick={() => handleGameClick(game)}
+                            />
+                        ))}
+                    </Stack>
+                </Box>
+            </Flex>
             {selectedGame && (
                 <Box mt="8">
                     <Center>

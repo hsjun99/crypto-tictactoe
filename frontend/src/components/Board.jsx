@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Box, Button, Center, Flex, Grid, GridItem, Heading, Text } from "@chakra-ui/react"
+import { Center, Box, Heading, Grid, GridItem, Button, Text, Progress } from "@chakra-ui/react"
 import trimAddress from "../utils/format"
 import { useQuery, useMutation, useQueryClient } from "react-query"
 import getGame from "../scripts/getGame"
@@ -7,8 +7,8 @@ import playGame from "../scripts/playGame"
 import getGameContract from "../scripts/getGameContract"
 
 const Board = ({ game, setGame, userAddress }) => {
-    const [player, setPlayer] = useState("X")
-    const [board, setBoard] = useState(Array(9).fill(null))
+    // const [player, setPlayer] = useState("X")
+    // const [board, setBoard] = useState(Array(9).fill(null))
     const [winner, setWinner] = useState(null)
 
     const queryClient = useQueryClient()
@@ -50,8 +50,8 @@ const Board = ({ game, setGame, userAddress }) => {
         const x = Math.floor(index / 3)
         const y = index % 3
         mutate({ x, y })
-        if (data?.turn != player) return
-        if (winner || board[index]) return
+        // if (data?.turn != player) return
+        // if (winner || board[index]) return
 
         // const newBoard = [...board]
         // newBoard[index] = player
@@ -93,8 +93,16 @@ const Board = ({ game, setGame, userAddress }) => {
     // }
 
     return (
-        <Center height="100vh" bg="gray.50">
-            <Box borderWidth="1px" borderRadius="lg" padding="8" bg="white" boxShadow="md">
+        <Center height="95vh" bg="gray.50">
+            <Box
+                borderWidth="1px"
+                borderRadius="lg"
+                padding="8"
+                bg="white"
+                boxShadow="md"
+                minWidth="50vh"
+                minHeight="50vh"
+            >
                 <Heading as="h1" size="lg" textAlign="center" mb="8">
                     Tic Tac Toe
                 </Heading>
@@ -114,21 +122,30 @@ const Board = ({ game, setGame, userAddress }) => {
                                 fontWeight="bold"
                                 onClick={() => handleSquareClick(index)}
                             >
-                                {/* {99} */}
                                 {value == 1 ? "X" : value == 2 ? "O" : null}
                             </Button>
                         </GridItem>
                     ))}
                 </Grid>
-                <Box marginTop="8">
+                <Box marginTop="8" textAlign="center">
                     {winner ? (
-                        <Text fontSize="3xl" textAlign="center" fontWeight="bold">
+                        <Text fontSize="3xl" fontWeight="bold">
                             Winner: {winner}
                         </Text>
                     ) : (
-                        <Text fontSize="3xl" textAlign="center" fontWeight="bold">
-                            Next player: {trimAddress(game.turn)}
-                        </Text>
+                        <>
+                            <Text fontSize="3xl" fontWeight="bold" mb="2">
+                                {data != null &&
+                                    (data?.turn != userAddress
+                                        ? `Next player: ${trimAddress(data?.turn)}`
+                                        : "Your turn!")}
+                            </Text>
+                            <Progress
+                                size="xs"
+                                isIndeterminate
+                                visibility={data?.turn != userAddress ? "visible" : "hidden"}
+                            />
+                        </>
                     )}
                 </Box>
             </Box>

@@ -14,12 +14,14 @@ import {
     ModalBody,
     ModalFooter,
 } from "@chakra-ui/react"
-import { useMutation } from "react-query"
+import { useMutation, useQueryClient } from "react-query"
 import createGame from "../scripts/createGame"
 
 const GameForm = ({}) => {
     const [name, setName] = useState("")
     const [isOpen, setIsOpen] = useState(false)
+
+    const queryClient = useQueryClient()
 
     const handleSubmit = (event) => {
         event.preventDefault()
