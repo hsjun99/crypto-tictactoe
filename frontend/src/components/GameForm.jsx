@@ -20,6 +20,7 @@ import createGame from "../scripts/createGame"
 const GameForm = ({}) => {
     const [name, setName] = useState("")
     const [isOpen, setIsOpen] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     const queryClient = useQueryClient()
 
@@ -33,6 +34,7 @@ const GameForm = ({}) => {
         // setName()
         // setStatus("waiting")
         // setParticipants("")
+        setIsLoading(true)
         setIsOpen(false)
         await mutate(name)
     }
@@ -40,12 +42,21 @@ const GameForm = ({}) => {
     const { mutate } = useMutation(createGame, {
         onSuccess: () => {
             queryClient.invalidateQueries("GamesData")
+            setIsLoading(false)
         },
     })
 
     return (
         <>
-            <Button justify="end" mr="16px" mt="16px" onClick={() => setIsOpen(true)}>
+            <Button
+                justify="end"
+                mr="16px"
+                mt="16px"
+                colorScheme="teal"
+                loadingText="Creating"
+                isLoading={isLoading}
+                onClick={() => setIsOpen(true)}
+            >
                 + New Game
             </Button>
             <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>

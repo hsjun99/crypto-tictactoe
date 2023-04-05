@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
 import { Box, Flex } from "@chakra-ui/react"
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"
 import AuthButton from "./components/AuthButton"
 import Board from "./components/Board"
 import GameList from "./components/GameList"
@@ -48,21 +49,30 @@ function App() {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <Box w="100vw">
-                <Flex justify="end" mr="16px" mt="16px">
-                    <AuthButton setUserAddress={setUserAddress} />
-                </Flex>
-                {joinedGame == null && (
-                    <GameList
-                        userAddress={userAddress}
-                        setJoinedGame={setJoinedGame}
-                        games={games}
-                        setGames={setGames}
-                    ></GameList>
-                )}
-                {/* {joinedGame == null && <GameForm></GameForm>} */}
-                {joinedGame != null && <Board game={joinedGame} userAddress={userAddress}></Board>}
-            </Box>
+            <Router>
+                <Box w="100vw">
+                    <Flex justify="end" mr="16px" mt="16px">
+                        <AuthButton setUserAddress={setUserAddress} />
+                    </Flex>
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={
+                                <GameList
+                                    userAddress={userAddress}
+                                    setJoinedGame={setJoinedGame}
+                                    games={games}
+                                    setGames={setGames}
+                                ></GameList>
+                            }
+                        ></Route>
+                        <Route
+                            path="/game/:gameId"
+                            element={<Board game={joinedGame} userAddress={userAddress}></Board>}
+                        ></Route>
+                    </Routes>
+                </Box>
+            </Router>
         </QueryClientProvider>
     )
 }

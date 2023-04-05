@@ -4,6 +4,7 @@ import getGameAll from "../scripts/getGameAll"
 import { useQuery } from "react-query"
 import joinGame from "../scripts/joinGame"
 import GameForm from "./GameForm"
+import { Link } from "react-router-dom"
 
 const GameCard = ({ game, onClick }) => {
     const { name, status, players } = game
@@ -166,11 +167,13 @@ const GameList = ({ userAddress, setJoinedGame }) => {
                         <Text fontWeight="bold">Selected game: {selectedGame.name}</Text>
                     </Center>
                     <Flex mt="4" justify="center">
-                        <Button mr="4" colorScheme="green" onClick={() => handleJoinGame()}>
-                            {selectedGame.players.includes(userAddress)
-                                ? "Enter Game"
-                                : "Join Game"}
-                        </Button>
+                        <Link to={{ pathname: "/game/" + selectedGame.key }}>
+                            <Button mr="4" colorScheme="green" onClick={() => handleJoinGame()}>
+                                {selectedGame.players.includes(userAddress)
+                                    ? "Enter Game"
+                                    : "Join Game"}
+                            </Button>
+                        </Link>
                         <Button colorScheme="red" onClick={() => setSelectedGame(null)}>
                             Cancel
                         </Button>

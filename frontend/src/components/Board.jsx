@@ -9,13 +9,12 @@ import {
     Text,
     Progress,
     Flex,
+    Icon,
 } from "@chakra-ui/react"
 import trimAddress from "../utils/format"
 import { useQuery, useMutation, useQueryClient } from "react-query"
 import getGame from "../scripts/getGame"
 import playGame from "../scripts/playGame"
-import getGameContract from "../scripts/getGameContract"
-import GAME_STATUS from "../utils/gameStatus"
 import claimReward from "../scripts/claimReward"
 
 const Board = ({ game, setGame, userAddress }) => {
@@ -42,7 +41,6 @@ const Board = ({ game, setGame, userAddress }) => {
             // refetchInterval: 5000
         }
     )
-    // console.log(data)
 
     let listenerCalls = 0
 
