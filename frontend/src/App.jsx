@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
 import { Box, Flex } from "@chakra-ui/react"
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import AuthButton from "./components/AuthButton"
 import Board from "./components/Board"
 import GameList from "./components/GameList"
